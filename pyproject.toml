@@ -1,10 +1,14 @@
+[build-system]
+requires = ["setuptools", "wheel", "read-version"]
+build-backend = "setuptools.build_meta"
+
+
 [tool.towncrier]
-    package = "hydra"
-    package_dir = ""
+    package = "hydra_plugins.hydra_optuna_sweeper"
     filename = "NEWS.md"
     directory = "news/"
     title_format = "{version} ({project_date})"
-    template = "news/_template.rst"
+    template = "../../news/_template.rst"
     issue_format = "[#{issue}](https://github.com/facebookresearch/hydra/issues/{issue})"
     start_string = "<!-- TOWNCRIER -->\n"
 
@@ -24,11 +28,6 @@
   showcontent = true
 
   [[tool.towncrier.type]]
-  directory = "plugin"
-  name = "Plugins"
-  showcontent = true
-
-  [[tool.towncrier.type]]
   directory = "config"
   name = "Configuration structure changes"
   showcontent = true
@@ -42,28 +41,3 @@
   directory = "maintenance"
   name = "Maintenance Changes"
   showcontent = true
-
-[tool.black]
-line-length = 88
-target-version = ['py38']
-include = '\.pyi?$'
-exclude = '''
-(
-  /(
-      .eggs         # exclude a few common directories in the
-    | .git          # root of the project
-    | .hg
-    | .mypy_cache
-    | hydra/grammar/gen
-    | tools/configen/example/gen
-    | .tox
-    | .nox
-    | website
-    | .venv
-    | _build
-    | dist
-    | build
-    | contrib
-  )
-)
-'''

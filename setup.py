@@ -1,61 +1,39 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
 # type: ignore
-import pathlib
+from pathlib import Path
 
-import pkg_resources
+from read_version import read_version
 from setuptools import find_namespace_packages, setup
 
-from build_helpers.build_helpers import (
-    ANTLRCommand,
-    BuildPyCommand,
-    CleanCommand,
-    Develop,
-    SDistCommand,
-    find_version,
-)
-
-with pathlib.Path("requirements/requirements.txt").open() as requirements_txt:
-    install_requires = [
-        str(requirement)
-        for requirement in pkg_resources.parse_requirements(requirements_txt)
-    ]
-
-
-with open("README.md") as fh:
-    LONG_DESC = fh.read()
-    setup(
-        cmdclass={
-            "antlr": ANTLRCommand,
-            "clean": CleanCommand,
-            "sdist": SDistCommand,
-            "build_py": BuildPyCommand,
-            "develop": Develop,
-        },
-        name="hydra-core",
-        version=find_version("hydra", "__init__.py"),
-        author="Omry Yadan",
-        author_email="omry@fb.com",
-        description="A framework for elegantly configuring complex applications",
-        license="MIT",
-        long_description=LONG_DESC,
-        long_description_content_type="text/markdown",
-        url="https://github.com/facebookresearch/hydra",
-        keywords="command-line configuration yaml tab-completion",
-        packages=find_namespace_packages(include=["hydra", "hydra.*"]),
-        include_package_data=True,
-        classifiers=[
-            "License :: OSI Approved :: MIT License",
-            "Development Status :: 4 - Beta",
-            "Programming Language :: Python :: 3.8",
-            "Programming Language :: Python :: 3.9",
-            "Programming Language :: Python :: 3.10",
-            "Programming Language :: Python :: 3.11",
-            "Operating System :: POSIX :: Linux",
-            "Operating System :: MacOS",
-            "Operating System :: Microsoft :: Windows",
+setup(
+    name="hydra-optuna-sweeper",
+    version=read_version("hydra_plugins/hydra_optuna_sweeper", "__init__.py"),
+    author="Toshihiko Yanase, Hiroyuki Vincent Yamazaki",
+    author_email="toshihiko.yanase@gmail.com, hiroyuki.vincent.yamazaki@gmail.com",
+    description="Hydra Optuna Sweeper plugin",
+    long_description=(Path(__file__).parent / "README.md").read_text(),
+    long_description_content_type="text/markdown",
+    url="https://github.com/facebookresearch/hydra/",
+    packages=find_namespace_packages(include=["hydra_plugins.*"]),
+    classifiers=[
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Operating System :: POSIX :: Linux",
+        "Operating System :: MacOS",
+        "Development Status :: 4 - Beta",
+    ],
+    install_requires=[
+        "hydra-core>=1.1.0.dev7",
+        "optuna>=4.2.1",
+        "sqlalchemy>=2.0.0",  # Updated for optuna v4.2.1 compatibility
+    ],
+    include_package_data=True,
+    entry_points={
+        "hydra_plugins": [
+            "optuna_sweeper = hydra_plugins.hydra_optuna_sweeper",
         ],
-        install_requires=install_requires,
-        entry_points={"pytest11": ["hydra_pytest = hydra.extra.pytest_plugin"]},
-        # Install development dependencies with
-        # pip install -r requirements/dev.txt -e .
-    )
+    },
+)
