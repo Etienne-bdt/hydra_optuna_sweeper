@@ -347,6 +347,16 @@ class OptunaSweeperImpl(Sweeper):
 
         directions = self._get_directions()
 
+        if self.storage is not None:
+            import os
+
+            if self.storage.startswith("sqlite:///"):
+                db_path = self.storage.replace("sqlite:///", "")
+                db_path = os.path.dirname(db_path)
+                db_path = os.path.abspath(db_path)
+                os.makedirs(db_path, exist_ok=True)
+
+
         study = optuna.create_study(
             study_name=self.study_name,
             storage=self.storage,
