@@ -1,2 +1,0 @@
-configen:
-  path: tools/${.name}
