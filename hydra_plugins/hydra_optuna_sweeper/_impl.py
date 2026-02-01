@@ -39,6 +39,7 @@ from optuna.distributions import (
     IntDistribution,
 )
 from optuna.trial import Trial
+from hydra_optuna_sweeper import trial_provider
 
 from .config import Direction, DistributionConfig, DistributionType
 
@@ -384,6 +385,7 @@ class OptunaSweeperImpl(Sweeper):
             self.job_idx += len(returns)
             failures = []
             for trial, ret in zip(trials, returns):
+                trial_provider.trial = trial  # type: ignore
                 values: Optional[List[float]] = None
                 state: optuna.trial.TrialState = optuna.trial.TrialState.COMPLETE
                 try:
